@@ -1,2 +1,4 @@
 seaborn
 librosa
+tqdm
+requests
