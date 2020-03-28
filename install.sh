@@ -3,7 +3,7 @@
 MODULE_DIR=$(realpath $(dirname $0))
 
 ENV_PATH="missing"
-HELP_MSG="Usage: install.sh --env=env_path"
+HELP_MSG="Usage: install.sh --env=/path/to/python/env"
 
 err() {
     echo
