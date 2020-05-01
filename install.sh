@@ -31,3 +31,6 @@ if [[ ${ENV_PATH} == "missing" ]]; then
 fi
 
 ${ENV_PATH}/bin/pip install -r ${MODULE_DIR}/requirements.txt
+
+# Dependencies required for Notebook plots
+# conda install -c plotly plotly-orca==1.2.1 psutil requests
