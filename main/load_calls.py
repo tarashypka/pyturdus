@@ -1,6 +1,6 @@
+import os
 import requests
 
-import pandas as pd
 from tqdm import tqdm
 
 from pysimple.io import from_tsv, to_tsv, ensure_filedir, ensure_dir, format_path
@@ -8,19 +8,10 @@ from pysimple.io import from_tsv, to_tsv, ensure_filedir, ensure_dir, format_pat
 
 CALLS_API = 'https://www.xeno-canto.org/{call_id}/download'
 
-DATA_DIR = ensure_dir('/mnt/storage/tas/data/xeno-canto')
-RECORDS_DIR = ensure_dir(DATA_DIR / 'records')
-RECORDS_PATH = RECORDS_DIR / 'records.tsv'
-GEN_RECORDS_PATH = RECORDS_DIR / 'gens' / '{gen}' / 'records.tsv'
-CALLS_DIR = ensure_dir(DATA_DIR / 'calls')
-GEN_CALL_PATH = CALLS_DIR / 'gens' / '{gen}' / '{call_id}.mp3'
-
-# Load records and calls only for most popular species
-MAX_GENS = 32
-# Load limited number of calls for every specie
-MAX_CALLS = 4096
-# Load only high quality calls
-QUALITY = ['A']
+DATA_DIR = ensure_dir(os.environ['DATA_DIR'])
+BIRDS_PATH = DATA_DIR / 'birds' / 'birds.tsv'
+RECORDS_PATH = DATA_DIR / 'records' / 'records.tsv'
+CALL_PATH = DATA_DIR / 'calls' / '{gen_sp}' / '{call_id}.mp3'
 
 
 def download_call(id: int):
@@ -28,36 +19,25 @@ def download_call(id: int):
     return requests.get(CALLS_API.format(call_id=id)).content
 
 
-def load_gens() -> pd.DataFrame:
-    """Load records for most popular species that were previously downloaded from xeno-canto API"""
-    records = from_tsv(RECORDS_PATH, usecols=['q', 'gen', 'id'])
-    # Get only best quality records
-    records = records[records['q'].isin(QUALITY)]
-    # Get only most popular birds
-    gens = records['gen'].value_counts().index[:MAX_GENS]
-    return records[records['gen'].isin(gens)]
-
-
 def load_calls():
     """
-    Download bird calls from xeno-canto for most popular species.
+    Download bird calls from xeno-canto for local birds.
     Download only new data, while keeping previously downloaded.
     """
 
-    print('Split loaded records into most popular species ...')
-    for gen, gen_records in load_gens().groupby('gen'):
-        gen_records_path = ensure_filedir(format_path(GEN_RECORDS_PATH, gen=gen))
-        if gen_records_path.exists():
-            continue
-        to_tsv(filepath=gen_records_path, data=gen_records)
+    birds = from_tsv(BIRDS_PATH, usecols=['gen', 'sp'])
+    birds['gen_sp'] = birds['gen'].str.lower() + '_' + birds['sp'].str.lower()
 
-    print(f'Load calls for {MAX_GENS} gens ...')
-    for gen, gen_records in load_gens().groupby('gen'):
-        gen_record_ids = gen_records['id'].values[:MAX_CALLS]
-        print(f'Load {len(gen_record_ids)} bird calls for specie {gen} ...')
-        for call_id in tqdm(gen_record_ids):
-            gen_call_path = ensure_filedir(format_path(GEN_CALL_PATH, gen=gen, call_id=call_id))
-            if gen_call_path.exists():
+    records = from_tsv(RECORDS_PATH, usecols=['gen', 'sp', 'id'])
+    records['gen_sp'] = records['gen'].str.lower() + '_' + records['sp'].str.lower()
+    records = records[records['gen_sp'].isin(birds['gen_sp'])]
+
+    print(f'Load calls for {len(birds)} species ...')
+    for gen_sp, gen_records in records.groupby('gen_sp'):
+        print(f'Load {len(gen_records)} bird calls for bird {gen_sp} ...')
+        for call_id in tqdm(gen_records['id']):
+            call_path = ensure_filedir(format_path(CALL_PATH, gen_sp=gen_sp, call_id=call_id))
+            if call_path.exists():
                 continue
             try:
                 call = download_call(id=call_id)
@@ -65,7 +45,7 @@ def load_calls():
                 print(err)
                 continue
             else:
-                gen_call_path.write_bytes(data=call)
+                call_path.write_bytes(data=call)
 
 
 def main():

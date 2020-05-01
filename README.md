@@ -22,6 +22,7 @@ Bird records and calls are taken from [xeno-canto](https://www.xeno-canto.org/)
 ```
 $ bash install.sh --env=/path/to/python/env
 $ source activate env
+$ export DATA_DIR=/path/to/data
 $ python main/load_records.py
 $ python main/load_calls.py
 ```

@@ -1,3 +1,4 @@
+import os
 import requests
 from typing import Dict
 
@@ -9,13 +10,10 @@ from pysimple.io import from_tsv, to_tsv, ensure_filedir, ensure_dir, format_pat
 
 RECORDS_API = 'http://www.xeno-canto.org/api/2/recordings?query=nr:0-10000000&page={page}'
 
-DATA_DIR = ensure_dir('/mnt/storage/tas/data/xeno-canto')
+DATA_DIR = ensure_dir(os.environ['DATA_DIR'])
 RECORDS_DIR = ensure_dir(DATA_DIR / 'records')
 RECORDS_PATH = RECORDS_DIR / 'records.tsv'
 PAGE_RECORDS_PATH = RECORDS_DIR / 'pages' / '{page}.tsv'
-
-# Load records from limited number of pages
-MAX_PAGES = 2048
 
 
 def get_records(page: int) -> Dict:
@@ -29,7 +27,6 @@ def load_records():
     Download only new data, while keeping previously downloaded.
     """
     pages = int(get_records(page=1)['numPages'])
-    pages = min(pages, MAX_PAGES)
 
     print(f'Load bird records from {pages} pages at xeno-canto ...')
     records = []
