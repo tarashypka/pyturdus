@@ -1,9 +1,12 @@
+import io
 import os
 import requests
+from pathlib import Path
 
+from pydub import AudioSegment
 from tqdm import tqdm
 
-from pysimple.io import from_tsv, to_tsv, ensure_filedir, ensure_dir, format_path
+from pysimple.io import from_tsv, ensure_filedir, ensure_dir, format_path
 
 
 CALLS_API = 'https://www.xeno-canto.org/{call_id}/download'
@@ -11,12 +14,19 @@ CALLS_API = 'https://www.xeno-canto.org/{call_id}/download'
 DATA_DIR = ensure_dir(os.environ['DATA_DIR'])
 BIRDS_PATH = DATA_DIR / 'birds' / 'birds.tsv'
 RECORDS_PATH = DATA_DIR / 'records' / 'records.tsv'
-CALL_PATH = DATA_DIR / 'calls' / '{gen_sp}' / '{call_id}.mp3'
+CALL_PATH = DATA_DIR / 'calls' / '{gen_sp}' / '{call_id}.wav'
 
 
-def download_call(id: int):
+def download_call(id: int) -> bytes:
     """Download bird call data from xeno-canto"""
     return requests.get(CALLS_API.format(call_id=id)).content
+
+
+def save_call(filepath: Path, data: bytes) -> None:
+    """Save call into file in WAV format"""
+    with io.BytesIO(data) as f:
+        sound = AudioSegment.from_mp3(f)
+        sound.export(filepath, format='wav')
 
 
 def load_calls():
@@ -45,7 +55,7 @@ def load_calls():
                 print(err)
                 continue
             else:
-                call_path.write_bytes(data=call)
+                save_call(filepath=call_path, data=call)
 
 
 def main():
