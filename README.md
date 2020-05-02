@@ -30,4 +30,6 @@ $ python main/load_calls.py
 ## References
 
 - [Who's singing? Automatic bird sound recognition with machine learning - Dan Stowell](https://www.youtube.com/watch?v=pzmdOETnhI0)
+- [Two Types of Communication Between Birds: Understanding Bird Language Songs And Calls](https://www.youtube.com/watch?v=4_1zIwEENt8)
+- [Bird identification Apps: Q&A with Mario Lasseck](https://www.xeno-canto.org/article/250)
 - [Птахи Києва та Київщини](http://www.dom-prirody.com.ua/priroda-kieva/ptahi)
