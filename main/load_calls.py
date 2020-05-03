@@ -4,6 +4,7 @@ import requests
 from pathlib import Path
 
 from pydub import AudioSegment
+from pydub.exceptions import CouldntDecodeError
 from tqdm import tqdm
 
 from pysimple.io import from_tsv, ensure_filedir, ensure_dir, format_path
@@ -25,8 +26,12 @@ def download_call(id: int) -> bytes:
 def save_call(filepath: Path, data: bytes) -> None:
     """Save call into file in WAV format"""
     with io.BytesIO(data) as f:
-        sound = AudioSegment.from_mp3(f)
-        sound.export(filepath, format='wav')
+        try:
+            sound = AudioSegment.from_mp3(f)
+        except CouldntDecodeError:
+            return
+        else:
+            sound.export(filepath, format='wav')
 
 
 def load_calls():
