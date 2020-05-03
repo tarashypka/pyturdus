@@ -33,5 +33,5 @@ $ python main/load_calls.py
 - [Who's singing? Automatic bird sound recognition with machine learning - Dan Stowell](https://www.youtube.com/watch?v=pzmdOETnhI0)
 - [Two Types of Communication Between Birds: Understanding Bird Language Songs And Calls](https://www.youtube.com/watch?v=4_1zIwEENt8)
 - [Bird identification Apps: Q&A with Mario Lasseck](https://www.xeno-canto.org/article/250)
-- [Getting to Know the Mel Spectrogram](http://localhost:8888/notebooks/rubecula/ipynb/librosa_mel.ipynb)
+- [Getting to Know the Mel Spectrogram](https://towardsdatascience.com/getting-to-know-the-mel-spectrogram-31bca3e2d9d0)
 - [Птахи Києва та Київщини](http://www.dom-prirody.com.ua/priroda-kieva/ptahi)
