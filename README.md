@@ -17,6 +17,7 @@ Bird records and calls are taken from [xeno-canto](https://www.xeno-canto.org/)
   - [Records analysis](https://github.com/tarashypka/rubecula/blob/master/ipynb/analyze_records.ipynb)
   - [Local birds](https://github.com/tarashypka/rubecula/blob/master/ipynb/local_birds.ipynb)
   - [Spectrograms](https://github.com/tarashypka/rubecula/blob/master/ipynb/spectrograms.ipynb)
+  - [Bird frequencies](https://github.com/tarashypka/rubecula/blob/master/ipynb/bird_frequencies.ipynb)
   
 ## Reproduce
 
