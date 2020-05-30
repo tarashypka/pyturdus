@@ -14,12 +14,13 @@ Bird records and calls are taken from [xeno-canto](https://www.xeno-canto.org/)
   - [Records loader](https://github.com/tarashypka/rubecula/blob/master/main/load_records.py)
   - [Calls loader](https://github.com/tarashypka/rubecula/blob/master/main/load_calls.py)
 - Features
-  - [Frequency stats](https://github.com/tarashypka/rubecula/blob/master/main/compute_features.py)
+  - [Frequency stats](https://github.com/tarashypka/rubecula/blob/master/main/compute_stats.py)
 - Notebooks
   - [Records analysis](https://github.com/tarashypka/rubecula/blob/master/ipynb/analyze_records.ipynb)
   - [Local birds](https://github.com/tarashypka/rubecula/blob/master/ipynb/local_birds.ipynb)
   - [Spectrograms](https://github.com/tarashypka/rubecula/blob/master/ipynb/spectrograms.ipynb)
   - [Bird frequencies](https://github.com/tarashypka/rubecula/blob/master/ipynb/bird_frequencies.ipynb)
+  - [Frequency stats](https://github.com/tarashypka/rubecula/blob/master/ipynb/frequency_stats.ipynb)
   
 ## Reproduce
 
@@ -29,6 +30,7 @@ $ source activate env
 $ export DATA_DIR=/path/to/data
 $ python main/load_records.py
 $ python main/load_calls.py
+$ python main/compute_stats.py
 ```
 
 ## References
