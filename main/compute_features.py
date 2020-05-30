@@ -39,7 +39,10 @@ for i, (bird, bird_records) in enumerate(records.groupby('gen_sp')):
         record_id = record['id']
         call_path = calls_dir / bird / f'{record_id}.wav'
 
-        call, sr = librosa.load(call_path, sr=44100)
+        try:
+            call, sr = librosa.load(call_path, sr=44100)
+        except FileNotFoundError:
+            continue
 
         # Trim silent edges
         call, _ = librosa.effects.trim(call)
