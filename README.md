@@ -13,6 +13,8 @@ Bird records and calls are taken from [xeno-canto](https://www.xeno-canto.org/)
 - Data loaders
   - [Records loader](https://github.com/tarashypka/rubecula/blob/master/main/load_records.py)
   - [Calls loader](https://github.com/tarashypka/rubecula/blob/master/main/load_calls.py)
+- Features
+  - [Frequency stats](https://github.com/tarashypka/rubecula/blob/master/main/compute_features.py)
 - Notebooks
   - [Records analysis](https://github.com/tarashypka/rubecula/blob/master/ipynb/analyze_records.ipynb)
   - [Local birds](https://github.com/tarashypka/rubecula/blob/master/ipynb/local_birds.ipynb)
