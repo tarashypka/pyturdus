@@ -1,4 +1,5 @@
 import os
+import warnings
 from pathlib import Path
 
 import librosa
@@ -7,9 +8,13 @@ from tqdm import tqdm
 
 from pysimple.io import from_tsv, dump_pickle
 
+warnings.filterwarnings(action='ignore', message='PySoundFile failed. Trying audioread instead.', category=UserWarning)
+
 
 N_FFT = 2048
 HOP_LENGTH = 512
+TYPES = ['song']
+QUALITIES = ['A', 'B']
 
 birds_path = Path(os.environ['DATA_DIR']) / 'birds' / 'birds.tsv'
 birds = from_tsv(birds_path)
@@ -17,13 +22,15 @@ birds['gen_sp'] = birds['gen'] + '_' + birds['sp']
 birds = birds.drop(columns=['gen', 'sp'])
 
 records_path = Path(os.environ['DATA_DIR']) / 'records' / 'records.tsv'
-records = from_tsv(records_path, usecols=['id', 'gen', 'sp'])
+records = from_tsv(records_path, usecols=['id', 'gen', 'sp', 'type', 'q'])
 records['gen_sp'] = records['gen'].str.lower() + '_' + records['sp'].str.lower()
 records = records.drop(columns=['gen', 'sp'])
 records = records.merge(birds, how='inner', on=['gen_sp'])
+records = records[records['type'].isin(TYPES)]
+records = records[records['q'].isin(QUALITIES)]
 
 calls_dir = Path(os.environ['DATA_DIR']) / 'calls'
-features_dir = Path(os.environ['DATA_DIR']) / 'features'
+features_dir = Path(os.environ['DATA_DIR']) / 'features_for_songs'
 
 for i, (bird, bird_records) in enumerate(records.groupby('gen_sp')):
     print(f'There are {len(bird_records)} records for bird "{bird}"')
